@@ -21,7 +21,7 @@ mpirun -n $NTASK release/cli $INPUT_FILE -c -x dc21 -s $TOTAL_INPUT_SIZE_BYTES -
 
 
 ## Notes
-We tested our implementation with gcc 12.2.0 and IntelMPI 2023.1.0.
+We tested our implementation with gcc 12.2.0 and IntelMPI 2021.11.0.
 
 To reduce the memory footprint of MPI we use the following environment variables.
 
