@@ -177,7 +177,6 @@ void configure_cli() {
                   atomic_sorter,
                   "Atomic sorter to be used. [sample_sort, rquick, ams, bitonic, rfis]");
     cp.add_bytes('l', "ams_levels", pdcx_config.ams_levels, "Number of levels to be used in ams.");
-
     cp.add_string('p',
                   "splitter_sampling",
                   "<F>",
@@ -238,6 +237,11 @@ void configure_cli() {
                  "inital_prefix_length",
                  sample_sort_config.inital_prefix_length,
                  "Inital prefix-length to use for prefix doubling.");
+    cp.add_bytes('V',
+                 "num_random_splitter_samples",
+                 sample_sort_config.num_random_splitter_samples,
+                 "Number of local splitter samples used in sample sort if random sampling is "
+                 "enabled. Defaults to 16 log p if not set.");
 }
 
 template <typename EnumType>
@@ -519,9 +523,9 @@ void select_dcx_variant(kamping::Communicator<>& comm) {
     //     run_pdcx<PDCX<char_type, index_type, DCXParam>, char_type, index_type>(comm);
     // }
 
-    // using DCXParam = DC39Param;
-    // using PDCXVariant = PDCX<char_type, index_type, DCXParam>;
-    // run_pdcx<PDCXVariant, char_type, index_type>(comm);
+    using DCXParam = DC39Param;
+    using PDCXVariant = PDCX<char_type, index_type, DCXParam>;
+    run_pdcx<PDCXVariant, char_type, index_type>(comm);
 }
 
 template <uint64_t EXTRA_WORDS = 0>

@@ -23,6 +23,8 @@ struct SampleSortConfig {
     double lcp_compression_threshold = 0.05;
     SplitterSampling splitter_sampling = SplitterSampling::Uniform;
     SplitterSorting splitter_sorting = SplitterSorting::Central;
+    uint64_t num_random_splitter_samples = 0; // defaults to 16 \log p, if set to 0
+
 
     void print_config() const {
         std::cout << "SampleSortConfig:\n";
@@ -34,6 +36,7 @@ struct SampleSortConfig {
         std::cout << V(use_prefix_doubling) << "\n";
         std::cout << "splitter_sampling=" << splitter_sampling_names[splitter_sampling] << "\n";
         std::cout << "splitter_sorting=" << splitter_sorting_names[splitter_sorting] << "\n";
+        std::cout << V(num_random_splitter_samples) << "\n";
         std::cout << std::endl;
     }
 };

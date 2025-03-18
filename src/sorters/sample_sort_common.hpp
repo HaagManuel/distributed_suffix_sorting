@@ -75,14 +75,6 @@ std::vector<DataType> sample_random_splitters(std::vector<DataType>& local_data,
                                               comm);
 }
 
-template <typename DataType>
-std::vector<DataType> sample_random_splitters(std::vector<DataType>& local_data,
-                                              Communicator<>& comm) {
-    const size_t log_p = std::ceil(std::log2(comm.size()));
-    const size_t nr_splitters = std::min(16 * log_p, local_data.size());
-    return sample_random_splitters(local_data, nr_splitters, comm);
-}
-
 // samples splitters in regular interval of sorted data
 
 template <typename DataType>
@@ -163,14 +155,20 @@ std::vector<DataType> get_global_splitters(std::vector<DataType>& local_data,
     if (config.splitter_sampling == SplitterSampling::Uniform) {
         local_splitters = sample_uniform_splitters(local_data, comm);
     } else {
-        local_splitters = sample_random_splitters(local_data, comm);
+        uint64_t nr_samples = config.num_random_splitter_samples;
+        if (nr_samples == 0) {
+            uint64_t log_p = std::ceil(std::log2(comm.size()));
+            nr_samples = std::min(16 * log_p, local_data.size());
+        }
+        local_splitters =
+            sample_random_splitters(local_data, nr_samples, comm);
     }
-    
+
     // select subset of splitters as global splitters
     std::vector<DataType> global_splitters;
     if (config.splitter_sorting == SplitterSorting::Distributed) {
         global_splitters =
-        sample_global_splitters_distributed(local_splitters, distributed_sorter, comm);
+            sample_global_splitters_distributed(local_splitters, distributed_sorter, comm);
     } else {
         global_splitters = sample_global_splitters_centralized(local_splitters, local_sorter, comm);
     }
@@ -216,7 +214,7 @@ std::vector<int64_t> compute_interval_sizes(std::vector<DataType>& local_data,
     size_t element_pos = 0;
     for (size_t i = 0; i < splitters.size(); ++i) {
         if (config.use_binary_search_for_splitters) {
-            // start left interval from last found 
+            // start left interval from last found
             const size_t start_pos = std::min(element_pos, local_data.size() - 1);
             KASSERT(start_pos < local_data.size());
             auto it = std::lower_bound(local_data.begin() + start_pos,
@@ -247,7 +245,8 @@ std::vector<int64_t> compute_interval_sizes(std::vector<DataType>& local_data,
         interval_sizes[i] -= interval_sizes[i - 1];
     }
     KASSERT(interval_sizes.size() == nr_send_counts);
-    KASSERT(std::accumulate(interval_sizes.begin(), interval_sizes.end(), int64_t(0)) == int64_t(local_n));
+    KASSERT(std::accumulate(interval_sizes.begin(), interval_sizes.end(), int64_t(0))
+            == int64_t(local_n));
     return interval_sizes;
 }
 
