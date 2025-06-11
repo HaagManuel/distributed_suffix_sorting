@@ -55,4 +55,11 @@ export I_MPI_MALLOC=0
 export I_MPI_SHM_HEAP_VSIZE=0
 ```
 
+## Some Results
+Our best configuration is called **DC39**.
 
+**Running times and memory blowup in our weak scaling experiments with 20MB per PE**
+![scaling](/images/scaling.png)
+
+**Throughput and memory blowup during our breakdown tests on 768 PEs.**
+![throughput](/images/throughput.png)
