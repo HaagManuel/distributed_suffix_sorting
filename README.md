@@ -1,6 +1,27 @@
 
 # Distributed DCX
-Implementation of distributed Difference Cover Modulo X (DCX) suffix array construction algorithm.
+This repository contains my [master thesis project](https://github.com/HaagManuel/distributed_suffix_sorting/blob/main/documents/Haag_Manuel_Master_Thesis_Distributed_Suffix_Sorting.pdf) of 2025 on distributed suffix array contruction.
+The code is written in C++20 using MPI for interprocess communication and the (zero-overhead) MPI Wrapper [KaMPIng](https://github.com/kamping-site/kamping).
+
+Suffix arrays are one of the most fundamental text indices that form the basis for fast
+substring search in DNA or other text corpora, text compression and many other string
+algorithms. 
+Their construction, also referred to as suffix sorting, consists in determining
+the lexicographic order of all suffixes of a text.
+
+Our algorithm is a distributed variant of *Difference Cover Modulo $X$ (DCX)* algorithm [[1]](https://www.cs.helsinki.fi/u/tpkarkka/publications/jacm05-revised.pdf) [[2]](https://publikationen.bibliothek.kit.edu/1000097661) that leverages the combinatorial structure of *difference covers* to efficiently sort the suffixes of the text.
+A preliminary publication can be found [here](https://arxiv.org/abs/2412.10160).
+
+
+![example_suffix_sorting](/images/sa_example.png)
+
+## Resources
+
+[[1] Juha Kärkkäinen, Peter Sanders, and Stefan Burkhardt. Linear work suffix array
+construction.](https://www.cs.helsinki.fi/u/tpkarkka/publications/jacm05-revised.pdf)
+
+[[2] Fabian Kulla and Peter Sanders. Scalable Parallel Suffix Array Construction](https://publikationen.bibliothek.kit.edu/1000097661)
+
 
 ## Compiling
 
